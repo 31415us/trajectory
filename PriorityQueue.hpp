@@ -98,6 +98,11 @@ class PriorityQueue
             _size = 0;
         }
 
+        bool isEmpty()
+        {
+            return (_size == 0);
+        }
+
         E peek(void)
         {
             return _elems[0].elem;
