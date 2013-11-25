@@ -1,10 +1,12 @@
 
 from AStar import GridState, aStar
 
+import Globals
+
 import RobotState
 
 def main():
-    for v in RobotState.unit_circle_approx:
+    for v in Globals.unit_circle_approx:
         print v
 
 
