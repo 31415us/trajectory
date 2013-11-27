@@ -1,7 +1,6 @@
 
-from AStar import GridState, aStar
 from planar import Vec2
-from RobotState import RobotState
+from RobotState import RobotState, aStar
 
 import Globals
 
@@ -12,21 +11,27 @@ class TestEnv(object):
 
 def main():
 
-    p = Vec2(0.0,0.0)
-    v = Vec2(0.01,0.0)
+    start_pos = Vec2(0.0,0.0)
+    start_speed = Vec2(0.01,0.0)
 
-    s = RobotState(p,v,0.0)
+    start = RobotState(start_pos,start_speed,0.0)
+
+    goal_pos = Vec2(0.02,0.0)
+    goal_speed = Vec2(0.01,0.0)
+
+    goal = RobotState(goal_pos,goal_speed,0.0)
 
     env = TestEnv()
 
-    neighs = s.neighbours(env)
+    path = aStar(start,goal,env)
 
-    print len(neighs)
+    print "start:\n {s}".format(s = start)
+    print "goal:\n {g}".format(g = goal)
 
-    for n in neighs:
-        print n
-        print n.quantized()
-        print '\n'
+    for node in path:
+        print node
+
+
     
 
 
