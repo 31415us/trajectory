@@ -32,7 +32,7 @@ end
 # unset irrelevant variables
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV "/home/pius/programming/CVRA/pytraj/env"
+set -gx VIRTUAL_ENV "/Users/PD/Desktop/cvra/trajectory/kinematic_planning/trajectory/py/env"
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/bin" $PATH
