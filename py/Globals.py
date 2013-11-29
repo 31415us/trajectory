@@ -1,7 +1,7 @@
 
 from planar import Polygon
 
-ROBOT_MAX_ACC = 0.008 # m/s^2
+ROBOT_MAX_ACC = 0.15 # m/s^2
 ROBOT_MAX_V = 0.5 # m/s
 ROBOT_RADIUS = 0.2 # m
 
