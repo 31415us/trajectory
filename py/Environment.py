@@ -1,18 +1,38 @@
 
-from planar import Vec2, Polygon, BoundingBox
+from planar import Vec2, Polygon, BoundingBox, Affine
 
 import Globals
+
 
 class Enemy(object):
     
     def __init__(self,trajectory,closed_trajectory,speed,shape):
-        self.trajectory = trajectory
-        self.closed_trajectory = closed_trajectory
+        self.traj = trajectory      # a polygon
+        self.traj_closed = closed_trajectory    # true if closed trajectory (ex: circle)
         self.speed = speed
         self.shape = shape      # a polygon
 
-    def after_time(self,time):
-        return self.shape
+    # TODO: treat non-closed trajectories
+    def position(self, time):
+        dist = self.speed * time
+        partial_dist = 0
+        cnt = 0
+        # when quitting the while loop position must lie on last line segment
+        while (partial_dist <= dist):
+            # plus length of next line segment
+            partial_dist += (self.traj[cnt+1] - self.traj[cnt]).length
+            cnt += cnt
+        cnt -= cnt
+        v = self.traj[cnt+1] - self.traj[cnt]
+        partial_dist -= v.length
+        delta_dist = dist - partial_dist
+        # line = v0 + s * v1
+        s = delta_dist / v.length
+
+        return  Affine.translation(self.traj[cnt] + s * v) # affine translation matrix
+
+    def after_time(self, time):
+        return self.position(time) * self.shape
 
 
 class Environment(object):
@@ -91,7 +111,7 @@ def poly_collides_poly(p1, p2):
 # return True if any vertex of p2 is in p1
 def poly_in_poly(p1, p2):
     for vert in p2:
-        if p1.contains_point(vert)
+        if p1.contains_point(vert):
             return True
 
     return False
