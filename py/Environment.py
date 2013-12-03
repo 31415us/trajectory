@@ -3,7 +3,6 @@ from planar import Vec2, Polygon, BoundingBox, Affine
 
 import Globals
 
-
 class Enemy(object):
     
     def __init__(self,trajectory,closed_trajectory,speed,shape):
@@ -44,7 +43,7 @@ class Environment(object):
 
     # returns True if robot collides with anything
     def collision(self,robot_pos,time):
-        robot_poly = Affine.translation(robot_pos) * ROBOT_POLYGON 
+        robot_poly = Affine.translation(robot_pos) * Globals.ROBOT_POLYGON 
 
         if (not poly_in_poly(self.border, robot_poly)):
             return True
@@ -111,10 +110,10 @@ def poly_collides_poly(p1, p2):
 # return True if any vertex of p2 is in p1
 def poly_in_poly(p1, p2):
     for vert in p2:
-        if p1.contains_point(vert):
-            return True
+        if not p1.contains_point(vert):
+            return False
 
-    return False
+    return True
 
 
 # http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect

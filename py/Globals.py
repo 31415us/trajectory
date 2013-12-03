@@ -1,9 +1,11 @@
 
 from planar import Polygon
 
-ROBOT_MAX_ACC = 0.15 # m/s^2
-ROBOT_MAX_V = 0.5 # m/s
+ROBOT_MAX_ACC = 1.6 # m/s^2
+ROBOT_MAX_V = 0.6 # m/s
 ROBOT_RADIUS = 0.2 # m
+
+PLAYGROUND_BORDER = Polygon([Vec2(0,0),Vec2(3,0),Vec2(3,2),Vec2(0,2)])
 
 DELTA_T = 0.1 # s
 

@@ -42,7 +42,7 @@ class RobotState(object):
         newPos = self.pos + (self.speed * Globals.DELTA_T)
         newTimeStamp = self.time_stamp + Globals.DELTA_T
 
-        if(env.collide(newPos,newTimeStamp)):
+        if(env.collision(newPos,newTimeStamp)):
             return res
 
         tangential = self.speed.normalized() * (Globals.ROBOT_MAX_ACC / tangential_acc_quantization) * Globals.DELTA_T
