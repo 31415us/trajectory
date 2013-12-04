@@ -62,13 +62,13 @@ class Environment(object):
         return False
 
     def border_as_tuple_list(self):
-        return Util.poly_to_tuples(border)
+        return Util.poly_to_tuples(self.border)
 
     def obstacles_as_tuples(self):
-        return [Util.poly_to_tuples(obs) for obs in obstacles]
+        return [Util.poly_to_tuples(obs) for obs in self.obstacles]
 
     def enemies_as_tuples(self,time):
-        return [Util.poly_to_tuples(enem.after_time(time)) for enem in enemies]
+        return [Util.poly_to_tuples(enem.after_time(time)) for enem in self.enemies]
 
 
 
