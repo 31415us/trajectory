@@ -2,4 +2,4 @@
 from planar import Polygon,Vec2
 
 def poly_to_tuples(p1):
-   return None 
+   return [(v.x,v.y) for v in p1]
