@@ -23,19 +23,19 @@ blue = (0,0,255)
 def main():
 
 
-    start_pos = Vec2(1.5,1.0)
+    start_pos = Vec2(0.5,1.0)
     start_speed = Vec2(0.01,0.0)
 
     start = RobotState(start_pos,start_speed,0.0)
 
-    goal_pos = Vec2(1.9,1.0)
+    goal_pos = Vec2(2.5,1.0)
     goal_speed = Vec2(0.0,0.0)
 
     goal = RobotState(goal_pos,goal_speed,0.0)
 
-    #obs1 = Affine.translation(Vec2(1,1)) * Globals.ROBOT_POLYGON
+    obs1 = Polygon([Vec2(1,1.25),Vec2(1.5,0.75),Vec2(1,0.75)])
 
-    env = Environment(Globals.PLAYGROUND_BORDER,[],[])
+    env = Environment(Globals.PLAYGROUND_BORDER,[],[obs1])
 
     path = aStar(start,goal,env)
 
