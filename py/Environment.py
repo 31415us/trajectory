@@ -2,6 +2,7 @@
 from planar import Vec2, Polygon, BoundingBox, Affine
 
 import Globals
+import Util
 
 class Enemy(object):
     
@@ -63,6 +64,17 @@ class Environment(object):
                 return True
 
         return False
+
+    def border_as_tuple_list(self):
+        return Util.poly_to_tuples(self.border)
+
+    def obstacles_as_tuples(self):
+        return [Util.poly_to_tuples(obs) for obs in self.obstacles]
+
+    def enemies_as_tuples(self,time):
+        return [Util.poly_to_tuples(enem.after_time(time)) for enem in self.enemies]
+
+
 
 def interval_collision(min1,max1,min2,max2):
     if min1 < max2 and min1 > min2:
