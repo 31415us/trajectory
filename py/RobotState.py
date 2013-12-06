@@ -17,19 +17,17 @@ class RobotState(object):
         self.pos = pos
         self.speed = speed
         self.time_stamp = time_stamp
+        x = int(self.pos.x / dpos)
+        y = int(self.pos.y / dpos)
+        vx = int(self.speed.x / dv)
+        vy = int(self.speed.y / dv)
+        self.quantized = (x,y,vx,vy)
 
     def __str__(self):
         return "Position: ({posx},{posy})\nSpeed: ({vx},{vy})\nTime: {time}\n".format(posx = self.pos.x,posy = self.pos.y,vx = self.speed.x,vy = self.speed.y,time = self.time_stamp)
 
     def __eq__(self,other):
         return self.quantized() == other.quantized()
-
-    def quantized(self):
-        x = int(self.pos.x / dpos)
-        y = int(self.pos.y / dpos)
-        vx = int(self.speed.x / dv)
-        vy = int(self.speed.y / dv)
-        return (x,y,vx,vy)
 
     def heuristic(self,other):
          return max((other.pos - self.pos).length / Globals.ROBOT_MAX_V, (other.speed - self.speed).length / Globals.ROBOT_MAX_ACC)
@@ -68,7 +66,7 @@ def aStar(start,goal,env):
     f_score = {}
     unquantized_state = {}
 
-    quant_start = start.quantized()
+    quant_start = start.quantized
     unquantized_state[quant_start] = start
 
     g_score[quant_start] = 0
@@ -97,7 +95,7 @@ def aStar(start,goal,env):
         #print current
         #print goal.quantized()
 
-        if current == goal.quantized():
+        if current == goal.quantized:
 #        if current == goal.quantized() or i == 9999:
             res = []
             curr = current
@@ -114,7 +112,7 @@ def aStar(start,goal,env):
             return [unquantized_state[i] for i in res]
 
         for neigh in real_current.neighbours(env):
-            quant_neigh = neigh.quantized()
+            quant_neigh = neigh.quantized
             tentative_g_score = g_score[current] + real_current.edgeLength(neigh)
             tentative_f_score = tentative_g_score + neigh.heuristic(goal)
             if (quant_neigh in visited) and (tentative_f_score >= f_score[quant_neigh]):
