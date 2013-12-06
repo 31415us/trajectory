@@ -46,7 +46,7 @@ class Environment(object):
     def collision(self,robot_pos,time):
         robot_poly = Affine.translation(robot_pos) * Globals.ROBOT_POLYGON 
 
-        if (not poly_in_poly(self.border, robot_poly)):
+        if (not poly_completly_inside_poly(self.border, robot_poly)):
             return True
 
         for obs in self.obstacles:
@@ -73,10 +73,10 @@ class Environment(object):
 
 
 def interval_collision(min1,max1,min2,max2):
-    if min1 < max2 and min1 > min2:
+    if min1 <= max2 and min1 >= min2:
         return True
 
-    if max1 < max2 and max1 > min2:
+    if min2 <= max1 and min2 >= min1:
         return True
 
     return False
@@ -87,7 +87,7 @@ def bounding_box_collision(p1,p2):
 
     cond1 = interval_collision(b1.min_point.x,b1.max_point.x,b2.min_point.x,b2.max_point.x)
     cond2 = interval_collision(b1.min_point.y,b1.max_point.y,b2.min_point.y,b2.max_point.y)
-    
+
     return cond1 and cond2 
     
 
@@ -105,27 +105,39 @@ def poly_collides_poly(p1, p2):
         return True
 
     # return True if any edges intersect
-    for i in range(0, len(p1)+1):
-        if i != len(p1)+1:
+    for i in range(0, len(p1)):
+        if i != len(p1) - 1:
             ni = i+1
         else:
             ni = 0
-        for j in range(0, len(p2)+1):
-            if j != len(p2)+1:
+        for j in range(0, len(p2)):
+            if j != len(p2) - 1:
                 nj = j+1
             else:
                 nj = 0
             
-            return linesegments_intersect(p1[i], p1[ni], p2[j], p2[nj])
+            if linesegments_intersect(p1[i], p1[ni], p2[j], p2[nj]):
+                return True
+
+    return False
 
 
-# return True if any vertex of p2 is in p1
-def poly_in_poly(p1, p2):
+# return True if all indices of p2 are inside p1
+def poly_completly_inside_poly(p1, p2):
     for vert in p2:
         if not p1.contains_point(vert):
             return False
 
     return True
+
+def poly_in_poly(p1,p2):
+    for vert in p2:
+        if p1.contains_point(vert):
+            return True
+
+    return False
+
+
 
 
 # http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
