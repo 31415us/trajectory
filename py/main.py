@@ -1,7 +1,7 @@
 
 from planar import Vec2, Polygon, Affine
 from RobotState import RobotState, aStar
-from Environment import Environment
+from Environment import Environment, poly_collides_poly
 
 import pygame,sys
 
@@ -33,9 +33,16 @@ def main():
 
     goal = RobotState(goal_pos,goal_speed,0.0)
 
-    obs1 = Polygon([Vec2(1,1.25),Vec2(1.5,0.75),Vec2(1,0.75)])
+    obs1 = Polygon([Vec2(1,1),Vec2(1.5,1),Vec2(1,1.5)])
+    obs2 = Affine.translation(Vec2(1,1.25)) * Globals.ROBOT_POLYGON
 
     env = Environment(Globals.PLAYGROUND_BORDER,[],[obs1])
+
+    #if poly_collides_poly(obs1,obs2):
+    #    print "(="
+    #else:
+    #    print ")="
+
 
     path = aStar(start,goal,env)
 
