@@ -12,15 +12,19 @@ class Enemy(object):
         self.speed = speed
         self.shape = shape      # a polygon
 
-    # TODO: treat non-closed trajectories
+    # TODO: treat non-closed trajectories; works only for a single "tour"
     def position(self, time):
         dist = self.speed * time
         partial_dist = 0
         cnt = 0
+        num_vert = len(self.shape)
+
+        if self.traj_closed:
         # when quitting the while loop position must lie on last line segment
         while (partial_dist <= dist):
             # plus length of next line segment
             partial_dist += (self.traj[cnt+1] - self.traj[cnt]).length
+            if cnt < num_vert
             cnt += cnt
         cnt -= cnt
         v = self.traj[cnt+1] - self.traj[cnt]
