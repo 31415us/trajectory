@@ -30,10 +30,12 @@ class RobotState(object):
         return self.quantized() == other.quantized()
 
     def heuristic(self,other):
-         return max((other.pos - self.pos).length / Globals.ROBOT_MAX_V, (other.speed - self.speed).length / Globals.ROBOT_MAX_ACC)
+         real_value = max((other.pos - self.pos).length / Globals.ROBOT_MAX_V, (other.speed - self.speed).length / Globals.ROBOT_MAX_ACC)
+         return int(real_value/Globals.DELTA_T)
 
     def edgeLength(self,other):
-        return Globals.DELTA_T
+        #return Globals.DELTA_T
+        return 1
 
     def neighbours(self,env):
         res = []
