@@ -24,7 +24,7 @@ def main():
 
 
     start_pos = Vec2(0.5,1.0)
-    start_speed = Vec2(0.01,0.0)
+    start_speed = Vec2(0.0,-0.1)
 
     start = RobotState(start_pos,start_speed,0.0)
 
