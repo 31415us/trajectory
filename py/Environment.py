@@ -20,18 +20,18 @@ class Enemy(object):
         num_vert = len(self.shape)
 
         if self.traj_closed:
-        # when quitting the while loop position must lie on last line segment
-        while (partial_dist <= dist):
-            # plus length of next line segment
-            partial_dist += (self.traj[cnt+1] - self.traj[cnt]).length
-            if cnt < num_vert
-            cnt += cnt
-        cnt -= cnt
-        v = self.traj[cnt+1] - self.traj[cnt]
-        partial_dist -= v.length
-        delta_dist = dist - partial_dist
-        # line = v0 + s * v1
-        s = delta_dist / v.length
+            # when quitting the while loop position must lie on last line segment
+            while(partial_dist <= dist):
+                # plus length of next line segment
+                partial_dist += (self.traj[cnt+1] - self.traj[cnt]).length
+                if cnt < num_vert:
+                    cnt += cnt
+            cnt -= cnt
+            v = self.traj[cnt+1] - self.traj[cnt]
+            partial_dist -= v.length
+            delta_dist = dist - partial_dist
+            # line = v0 + s * v1
+            s = delta_dist / v.length
 
         return  Affine.translation(self.traj[cnt] + s * v) # affine translation matrix
 
