@@ -1,7 +1,9 @@
 
 from planar import Vec2
 from heapdict import heapdict
+from IntegerHeap import IntegerHeap
 from math import sqrt
+from collections import defaultdict
 
 import Globals
 
@@ -63,7 +65,8 @@ class RobotState(object):
 def aStar(start,goal,env):
     visited = set()
     parents = {}
-    queue = heapdict()
+    queue = IntegerHeap(5)
+    queue_lookup = defaultdict(list)
     g_score = {}
     f_score = {}
     unquantized_state = {}
@@ -73,38 +76,23 @@ def aStar(start,goal,env):
 
     g_score[quant_start] = 0
     f_score[quant_start] = g_score[quant_start] + start.heuristic(goal)
-    queue[quant_start] = f_score[quant_start]
+    queue.add(f_score[quant_start])
+    queue_lookup[f_score[quant_start]].append(quant_start)
 
-#    best_yet = start
-#    best_dist = (goal.pos - start.pos).length
+    while queue.__nonzero__(): #sorry have to test if vEB-queue is empty...
 
+        curr_min = queue.min()
+        current = queue_lookup[curr_min].pop()
+        if not queue_lookup[curr_min]:
+            queue.remove(curr_min)
 
-    while queue:
-#    for i in range(0,10000):
-
-        #print len(queue)
-
-        current = queue.popitem()[0] 
         real_current = unquantized_state[current]
         visited.add(current)
 
-#        current_dist = (real_current.pos - goal.pos).length
-#        if current_dist < best_dist:
-#            best_yet = real_current
-#            best_dist = current_dist
-        
-
-        #print current
-        #print goal.quantized()
 
         if current == goal.quantized:
-#        if current == goal.quantized() or i == 9999:
             res = []
             curr = current
-#            if i == 9999:
-#                curr = best_yet.quantized()
-#            else:
-#                curr = current
 
             while parents.get(curr):
                 res.append(curr)
@@ -123,7 +111,9 @@ def aStar(start,goal,env):
                 parents[quant_neigh] = current
                 g_score[quant_neigh] = tentative_g_score
                 f_score[quant_neigh] = tentative_f_score
-                queue[quant_neigh] = f_score[quant_neigh]
+                queue.add(f_score[quant_neigh])
+                queue_lookup[f_score[quant_neigh]].append(quant_neigh)
+
                 unquantized_state[quant_neigh] = neigh
 
     return None
