@@ -33,7 +33,7 @@ class RobotState(object):
 
     def heuristic(self,other):
          real_value = max((other.pos - self.pos).length / Globals.ROBOT_MAX_V, (other.speed - self.speed).length / Globals.ROBOT_MAX_ACC)
-         return int(real_value/Globals.DELTA_T)
+         return int(1*(real_value/Globals.DELTA_T))
 
     def edgeLength(self,other):
         #return Globals.DELTA_T
@@ -79,7 +79,7 @@ def aStar(start,goal,env):
     queue.add(f_score[quant_start])
     queue_lookup[f_score[quant_start]].append(quant_start)
 
-    while queue.__nonzero__(): #sorry have to test if vEB-queue is empty...
+    while queue:
 
         curr_min = queue.min()
         current = queue_lookup[curr_min].pop()

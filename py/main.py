@@ -8,7 +8,7 @@ import pygame,sys
 import Globals
 import Util
 
-# pygame setup and vars
+#pygame setup and vars
 width = 600 # px
 height = 400 # px
 width_conversion = width / Globals.PLAYGROUND_WIDTH
@@ -24,11 +24,11 @@ def main():
 
 
     start_pos = Vec2(0.5,1.0)
-    start_speed = Vec2(0.0,-0.1)
+    start_speed = Vec2(0.2,0.3)
 
     start = RobotState(start_pos,start_speed,0.0)
 
-    goal_pos = Vec2(0.5,0.5)
+    goal_pos = Vec2(2.5,1.0)
     goal_speed = Vec2(0.0,0.0)
 
     goal = RobotState(goal_pos,goal_speed,0.0)
