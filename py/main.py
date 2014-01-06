@@ -9,10 +9,12 @@ import Globals
 import Util
 
 #pygame setup and vars
-width = 600 # px
-height = 400 # px
+px_per_meter = 400
+width = Globals.PLAYGROUND_WIDTH * px_per_meter # px
+height = Globals.PLAYGROUND_HEIGHT * px_per_meter # px
 width_conversion = width / Globals.PLAYGROUND_WIDTH
 height_conversion = height / Globals.PLAYGROUND_HEIGHT
+pygame.init()
 screen = pygame.display.set_mode((width,height))
 white = (255,255,255)
 black = (0,0,0)
@@ -67,12 +69,22 @@ def main():
 
         pygame.draw.lines(screen,green,False,convert_to_px_coords(Util.path_to_tuples(path)),1)
 
+        for node in path:
+            draw_state(node)
+
         pygame.display.update()
+
+def draw_state(state):
+    pygame.draw.circle(screen,red,to_px_coords((state.pos.x,state.pos.y)),2,0)
+    pygame.draw.circle(screen,green,to_px_coords((state.pos.x,state.pos.y)),int(Globals.ROBOT_RADIUS * px_per_meter),1)
+
     
+def to_px_coords(tup):
+    scaled = (int(tup[0] * width_conversion), int(tup[1] * height_conversion))
+    return (scaled[0],height - scaled[1])
+
 def convert_to_px_coords(tuples):
-    scaled = [(int(tup[0] * width_conversion),int(tup[1] * height_conversion)) for tup in tuples]
-    invert_y = [(v[0],height - v[1]) for v in scaled]
-    return invert_y
+    return [to_px_coords(t) for t in tuples]
 
 
 
