@@ -8,7 +8,7 @@ from collections import defaultdict
 import Globals
 
 tangential_acc_quantization = 1
-normal_acc_quantization = 2
+normal_acc_quantization = 1
 
 dv = (Globals.ROBOT_MAX_ACC/max(tangential_acc_quantization,normal_acc_quantization)) * Globals.DELTA_T
 dpos = dv * Globals.DELTA_T
@@ -32,12 +32,14 @@ class RobotState(object):
         return self.quantized() == other.quantized()
 
     def heuristic(self,other):
+         acc_time = (self.speed.length - Globals.ROBOT_MAX_V) / Globals.ROBOT_MAX_ACC
          real_value = max((other.pos - self.pos).length / Globals.ROBOT_MAX_V, (other.speed - self.speed).length / Globals.ROBOT_MAX_ACC)
-         return int(1*(real_value/Globals.DELTA_T))
+         return real_value + acc_time
+         #return int(1*(real_value/Globals.DELTA_T))
 
     def edgeLength(self,other):
-        #return Globals.DELTA_T
-        return 1
+        return Globals.DELTA_T
+        #return 1
 
     def neighbours(self,env):
         res = []
@@ -65,8 +67,9 @@ class RobotState(object):
 def aStar(start,goal,env):
     visited = set()
     parents = {}
-    queue = IntegerHeap(5)
-    queue_lookup = defaultdict(list)
+    queue = heapdict()
+    #queue = IntegerHeap(5)
+    #queue_lookup = defaultdict(list)
     g_score = {}
     f_score = {}
     unquantized_state = {}
@@ -76,15 +79,19 @@ def aStar(start,goal,env):
 
     g_score[quant_start] = 0
     f_score[quant_start] = g_score[quant_start] + start.heuristic(goal)
-    queue.add(f_score[quant_start])
-    queue_lookup[f_score[quant_start]].append(quant_start)
+
+    queue[quant_start] = f_score[quant_start]
+    #queue.add(f_score[quant_start])
+    #queue_lookup[f_score[quant_start]].append(quant_start)
 
     while queue:
 
-        curr_min = queue.min()
-        current = queue_lookup[curr_min].pop()
-        if not queue_lookup[curr_min]:
-            queue.remove(curr_min)
+        #curr_min = queue.min()
+        #current = queue_lookup[curr_min].pop()
+        #if not queue_lookup[curr_min]:
+        #    queue.remove(curr_min)
+
+        current = queue.popitem()[0]
 
         real_current = unquantized_state[current]
         visited.add(current)
@@ -111,8 +118,10 @@ def aStar(start,goal,env):
                 parents[quant_neigh] = current
                 g_score[quant_neigh] = tentative_g_score
                 f_score[quant_neigh] = tentative_f_score
-                queue.add(f_score[quant_neigh])
-                queue_lookup[f_score[quant_neigh]].append(quant_neigh)
+                #queue.add(f_score[quant_neigh])
+                #queue_lookup[f_score[quant_neigh]].append(quant_neigh)
+
+                queue[quant_neigh] = f_score[quant_neigh]
 
                 unquantized_state[quant_neigh] = neigh
 
