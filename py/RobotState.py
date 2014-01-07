@@ -6,9 +6,10 @@ from math import sqrt
 from collections import defaultdict
 
 import Globals
+from Util import quadratic_solver_only_positive_solution
 
 tangential_acc_quantization = 1
-normal_acc_quantization = 1
+normal_acc_quantization = 2
 
 dv = (Globals.ROBOT_MAX_ACC/max(tangential_acc_quantization,normal_acc_quantization)) * Globals.DELTA_T
 dpos = dv * Globals.DELTA_T
@@ -32,10 +33,10 @@ class RobotState(object):
         return self.quantized() == other.quantized()
 
     def heuristic(self,other):
-         acc_time = (self.speed.length - Globals.ROBOT_MAX_V) / Globals.ROBOT_MAX_ACC
-         real_value = max((other.pos - self.pos).length / Globals.ROBOT_MAX_V, (other.speed - self.speed).length / Globals.ROBOT_MAX_ACC)
-         return real_value + acc_time
-         #return int(1*(real_value/Globals.DELTA_T))
+        return best_straight_line_time(self.speed.length,other.speed.length,(self.pos - other.pos).length)
+        #real_value = max((other.pos - self.pos).length / Globals.ROBOT_MAX_V, (other.speed - self.speed).length / Globals.ROBOT_MAX_ACC)
+        #return real_value + acc_time
+        #return int(1*(real_value/Globals.DELTA_T))
 
     def edgeLength(self,other):
         return Globals.DELTA_T
@@ -63,6 +64,41 @@ class RobotState(object):
 
 
         return res
+
+# all scalar inputs
+def best_straight_line_time(v1,v2,d):
+    result = 0.0
+    remaining_dist = d
+    max_v = max(v1,v2)
+    min_v = min(v1,v2)
+    delta_v = max_v - min_v
+
+    #time used and distance travelled during speed correction
+    speed_correction_time = delta_v / Globals.ROBOT_MAX_ACC 
+    speed_correction_distance = (min_v + (delta_v / 2)) * speed_correction_time
+    if speed_correction_distance > remaining_dist:
+        # though luck no solution
+        return float("inf")
+
+    remaining_dist -= speed_correction_distance
+    result += speed_correction_time
+
+    # time and distance travelled during acceleration and deceleration to robot_max_v
+    delta_to_max = Globals.ROBOT_MAX_V - max_v
+    acc_time = delta_to_max / Globals.ROBOT_MAX_ACC
+    dist_acc_decc = ((2 * max_v) + delta_to_max) * acc_time
+    if dist_acc_decc > remaining_dist:
+        result += 2 * quadratic_solver_only_positive_solution(Globals.ROBOT_MAX_ACC,max_v, -(remaining_dist/2))
+        return result
+
+    remaining_dist -= dist_acc_decc
+    result += 2 * acc_time
+
+    # time to travel remaining distance
+
+    result += remaining_dist / Globals.ROBOT_MAX_V
+
+    return result
 
 def aStar(start,goal,env):
     visited = set()
