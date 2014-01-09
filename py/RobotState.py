@@ -9,7 +9,7 @@ import Globals
 from Util import quadratic_solver_only_positive_solution
 
 tangential_acc_quantization = 1
-normal_acc_quantization = 2
+normal_acc_quantization = 1
 
 dv = (Globals.ROBOT_MAX_ACC/max(tangential_acc_quantization,normal_acc_quantization)) * Globals.DELTA_T
 dpos = dv * Globals.DELTA_T
@@ -35,7 +35,7 @@ class RobotState(object):
     def heuristic(self,other):
         return best_straight_line_time(self.speed.length,other.speed.length,(self.pos - other.pos).length)
         #real_value = max((other.pos - self.pos).length / Globals.ROBOT_MAX_V, (other.speed - self.speed).length / Globals.ROBOT_MAX_ACC)
-        #return real_value + acc_time
+        #return real_value
         #return int(1*(real_value/Globals.DELTA_T))
 
     def edgeLength(self,other):

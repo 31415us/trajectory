@@ -9,18 +9,18 @@ import Globals
 import Util
 
 #pygame setup and vars
-px_per_meter = 400
-width = Globals.PLAYGROUND_WIDTH * px_per_meter # px
-height = Globals.PLAYGROUND_HEIGHT * px_per_meter # px
-width_conversion = width / Globals.PLAYGROUND_WIDTH
-height_conversion = height / Globals.PLAYGROUND_HEIGHT
-pygame.init()
-screen = pygame.display.set_mode((width,height))
-white = (255,255,255)
-black = (0,0,0)
-red = (255,0,0)
-green = (0,255,0)
-blue = (0,0,255)
+#px_per_meter = 400
+#width = Globals.PLAYGROUND_WIDTH * px_per_meter # px
+#height = Globals.PLAYGROUND_HEIGHT * px_per_meter # px
+#width_conversion = width / Globals.PLAYGROUND_WIDTH
+#height_conversion = height / Globals.PLAYGROUND_HEIGHT
+#pygame.init()
+#screen = pygame.display.set_mode((width,height))
+#white = (255,255,255)
+#black = (0,0,0)
+#red = (255,0,0)
+#green = (0,255,0)
+#blue = (0,0,255)
 
 def main():
 
@@ -54,25 +54,25 @@ def main():
     #for node in path:
     #    print node
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
+    #while True:
+    #    for event in pygame.event.get():
+    #        if event.type == pygame.QUIT:
+    #            pygame.quit()
+    #            sys.exit()
 
-        screen.fill(black)
+    #    screen.fill(black)
 
-        pygame.draw.lines(screen,white,True,convert_to_px_coords(env.border_as_tuple_list()),1)
+    #    pygame.draw.lines(screen,white,True,convert_to_px_coords(env.border_as_tuple_list()),1)
 
-        for obs in env.obstacles_as_tuples():
-            pygame.draw.lines(screen,red,True,convert_to_px_coords(obs),1)
+    #    for obs in env.obstacles_as_tuples():
+    #        pygame.draw.lines(screen,red,True,convert_to_px_coords(obs),1)
 
-        pygame.draw.lines(screen,green,False,convert_to_px_coords(Util.path_to_tuples(path)),1)
+    #    pygame.draw.lines(screen,green,False,convert_to_px_coords(Util.path_to_tuples(path)),1)
 
-        for node in path:
-            draw_state(node)
+    #    for node in path:
+    #        draw_state(node)
 
-        pygame.display.update()
+    #    pygame.display.update()
 
 def draw_state(state):
     pygame.draw.circle(screen,red,to_px_coords((state.pos.x,state.pos.y)),2,0)
