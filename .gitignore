@@ -18,6 +18,7 @@
 # others
 *.d
 *.pyc
+*.png
 
 # virtualenv
 ./env/*
