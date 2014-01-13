@@ -1,9 +1,7 @@
 
 from planar import Vec2
 from heapdict import heapdict
-from IntegerHeap import IntegerHeap
 from math import sqrt
-from collections import defaultdict
 
 import Globals
 from Util import quadratic_solver_only_positive_solution
@@ -104,8 +102,6 @@ def aStar(start,goal,env):
     visited = set()
     parents = {}
     queue = heapdict()
-    #queue = IntegerHeap(5)
-    #queue_lookup = defaultdict(list)
     g_score = {}
     f_score = {}
     unquantized_state = {}
@@ -117,15 +113,8 @@ def aStar(start,goal,env):
     f_score[quant_start] = g_score[quant_start] + start.heuristic(goal)
 
     queue[quant_start] = f_score[quant_start]
-    #queue.add(f_score[quant_start])
-    #queue_lookup[f_score[quant_start]].append(quant_start)
 
     while queue:
-
-        #curr_min = queue.min()
-        #current = queue_lookup[curr_min].pop()
-        #if not queue_lookup[curr_min]:
-        #    queue.remove(curr_min)
 
         current = queue.popitem()[0]
 
@@ -154,8 +143,6 @@ def aStar(start,goal,env):
                 parents[quant_neigh] = current
                 g_score[quant_neigh] = tentative_g_score
                 f_score[quant_neigh] = tentative_f_score
-                #queue.add(f_score[quant_neigh])
-                #queue_lookup[f_score[quant_neigh]].append(quant_neigh)
 
                 queue[quant_neigh] = f_score[quant_neigh]
 
