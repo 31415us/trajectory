@@ -1,16 +1,22 @@
 
-from planar import Vec2
+from planar import Vec2, Polygon, Affine
 from heapdict import heapdict
 from math import sqrt
 
 import Globals
 from Util import quadratic_solver_only_positive_solution
 
-tangential_acc_quantization = 1
-normal_acc_quantization = 1
+#tangential_acc_quantization = 1
+#normal_acc_quantization = 2
+#
+#dv = (Globals.ROBOT_MAX_ACC/max(tangential_acc_quantization,normal_acc_quantization)) * Globals.DELTA_T
+#dpos = dv * Globals.DELTA_T
 
-dv = (Globals.ROBOT_MAX_ACC/max(tangential_acc_quantization,normal_acc_quantization)) * Globals.DELTA_T
+dv = Globals.ROBOT_MAX_ACC * Globals.DELTA_T
 dpos = dv * Globals.DELTA_T
+
+N_NEIGHBOURS = 8
+DELTA_VS = Polygon.regular(N_NEIGHBOURS, radius = dv)
 
 class RobotState(object):
 
@@ -41,27 +47,42 @@ class RobotState(object):
         #return 1
 
     def neighbours(self,env):
-        res = []
+        
         newPos = self.pos + (self.speed * Globals.DELTA_T)
         newTimeStamp = self.time_stamp + Globals.DELTA_T
 
         if(env.collision(newPos,newTimeStamp)):
-            return res
+            return []
 
-        tangential = self.speed.normalized() * (Globals.ROBOT_MAX_ACC / tangential_acc_quantization) * Globals.DELTA_T
-        normal = self.speed.normalized().perpendicular() * (Globals.ROBOT_MAX_ACC / normal_acc_quantization) * Globals.DELTA_T
+        delta_vs = Affine.rotation(self.speed.angle) * DELTA_VS
 
-        speeds = []
-        for i in range(-tangential_acc_quantization, tangential_acc_quantization + 1):
-            for j in range(-normal_acc_quantization, normal_acc_quantization + 1):
-                delta_v = (i * tangential) + (j * normal)
-                s = self.speed + delta_v.clamped(0.0,Globals.ROBOT_MAX_ACC*Globals.DELTA_T)
-                speeds.append(s.clamped(0.0,Globals.ROBOT_MAX_V))
+        speeds = [(self.speed + v).clamped(0.0,Globals.ROBOT_MAX_V) for v in delta_vs]
+        speeds.append(self.speed)
 
-        res = [RobotState(newPos,speed,newTimeStamp) for speed in speeds]
+        return [RobotState(newPos,speed,newTimeStamp) for speed in speeds]
+
+    #def neighbours(self,env):
+    #    res = []
+    #    newPos = self.pos + (self.speed * Globals.DELTA_T)
+    #    newTimeStamp = self.time_stamp + Globals.DELTA_T
+
+    #    if(env.collision(newPos,newTimeStamp)):
+    #        return res
+
+    #    tangential = self.speed.normalized() * (Globals.ROBOT_MAX_ACC / tangential_acc_quantization) * Globals.DELTA_T
+    #    normal = self.speed.normalized().perpendicular() * (Globals.ROBOT_MAX_ACC / normal_acc_quantization) * Globals.DELTA_T
+
+    #    speeds = []
+    #    for i in range(-tangential_acc_quantization, tangential_acc_quantization + 1):
+    #        for j in range(-normal_acc_quantization, normal_acc_quantization + 1):
+    #            delta_v = (i * tangential) + (j * normal)
+    #            s = self.speed + delta_v.clamped(0.0,Globals.ROBOT_MAX_ACC*Globals.DELTA_T)
+    #            speeds.append(s.clamped(0.0,Globals.ROBOT_MAX_V))
+
+    #    res = [RobotState(newPos,speed,newTimeStamp) for speed in speeds]
 
 
-        return res
+    #    return res
 
 # all scalar inputs
 def best_straight_line_time(v1,v2,d):
