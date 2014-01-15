@@ -6,6 +6,8 @@ from math import sqrt
 import Globals
 from Util import quadratic_solver_only_positive_solution
 
+from memprof import *
+
 #tangential_acc_quantization = 1
 #normal_acc_quantization = 2
 #
@@ -37,7 +39,9 @@ class RobotState(object):
         return self.quantized() == other.quantized()
 
     def heuristic(self,other):
-        return best_straight_line_time(self.speed.length,other.speed.length,(self.pos - other.pos).length)
+        dpos = other.pos - self.pos
+        angle = self.speed.normalized().dot(dpos.normalized())
+        return (2 - angle) * best_straight_line_time(self.speed.length,other.speed.length,(self.pos - other.pos).length)
         #real_value = max((other.pos - self.pos).length / Globals.ROBOT_MAX_V, (other.speed - self.speed).length / Globals.ROBOT_MAX_ACC)
         #return real_value
         #return int(1*(real_value/Globals.DELTA_T))
@@ -119,6 +123,7 @@ def best_straight_line_time(v1,v2,d):
 
     return result
 
+#@memprof(plot = True)
 def aStar(start,goal,env):
     visited = set()
     parents = {}
