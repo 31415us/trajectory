@@ -19,6 +19,7 @@
 *.d
 *.pyc
 *.png
+*.log
 
 # virtualenv
 ./env/*
