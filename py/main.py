@@ -3,8 +3,8 @@ from planar import Vec2, Polygon, Affine
 from RobotState import RobotState, aStar
 from Environment import Environment, poly_collides_poly
 
-from pycallgraph import PyCallGraph
-from pycallgraph.output import GraphvizOutput
+#from pycallgraph import PyCallGraph
+#from pycallgraph.output import GraphvizOutput
 
 import pygame,sys
 
@@ -49,8 +49,8 @@ def main():
     #    print ")="
 
 
-    with PyCallGraph(output = GraphvizOutput()):
-        path = aStar(start,goal,env)
+    #with PyCallGraph(output = GraphvizOutput()):
+    path = aStar(start,goal,env)
 
     #print "start:\n {s}".format(s = start)
     #print "goal:\n {g}".format(g = goal)
