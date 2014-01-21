@@ -19,6 +19,8 @@ dpos = dv * Globals.DELTA_T
 
 N_NEIGHBOURS = 8
 DELTA_VS = Polygon.regular(N_NEIGHBOURS, radius = dv)
+BRAKE_ONLY = [v for v in DELTA_VS if v.x < 0]
+NO_BRAKE = [v for v in DELTA_VS if v.x >= 0]
 
 class RobotState(object):
 
@@ -49,6 +51,10 @@ class RobotState(object):
     def edgeLength(self,other):
         return Globals.DELTA_T
         #return 1
+
+    def braking_dist(self):
+        s = self.speed.length
+        return (0.5 * ((s*s) / Globals.ROBOT_MAX_ACC))
 
     def neighbours(self,env):
         

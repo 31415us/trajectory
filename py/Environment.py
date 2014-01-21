@@ -65,6 +65,21 @@ class Environment(object):
 
         return False
 
+    def consider_braking(self,state):
+        braking_poly = Affine.translation(state.pos) * Polygon.regular(32, Globals.ROBOT_RADIUS + state.braking_dist())
+
+        for obs in self.obstacles:
+            if poly_collides_poly(obs,braking_poly):
+                return True
+
+        enemy_polys = [e.after_time(state.time_stamp) for e in self.enemies]
+
+        for enem in enemy_polys:
+            if poly_collides_poly(enem,braking_poly):
+                return True
+
+        return False
+
     def border_as_tuple_list(self):
         return Util.poly_to_tuples(self.border)
 
